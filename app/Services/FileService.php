@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\ScalePostImage;
 use Illuminate\Http\UploadedFile;
 
 class FileService
@@ -13,6 +14,7 @@ class FileService
         if ($file) {
             $fileName = time() . '_' . $file->getClientOriginalName();
             $filePath = $file->storeAs('uploads', $fileName, 'public');
+            ScalePostImage::dispatch($filePath);
         }
 
         return $filePath;
