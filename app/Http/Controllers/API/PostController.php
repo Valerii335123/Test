@@ -9,6 +9,7 @@ use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Services\FileService;
 use App\Services\PostService;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -26,6 +27,8 @@ class PostController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
+        Gate::authorize('view post');
+
         $posts = $this->postService->getPosts();
         return PostResource::collection($posts);
     }
@@ -35,6 +38,8 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request): PostResource
     {
+        Gate::authorize('create post');
+
         $data = $request->validated();
         if (isset($data['image'])) {
             $file = $data['image'];
@@ -50,6 +55,7 @@ class PostController extends Controller
      */
     public function show(Post $post): PostResource
     {
+        Gate::authorize('view', $post);
         return new PostResource($post);
     }
 
@@ -58,6 +64,8 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post): PostResource
     {
+        Gate::authorize('update', $post);
+
         $data = $request->validated();
         if (isset($data['image'])) {
             $file = $data['image'];
@@ -73,6 +81,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post): JsonResponse
     {
+        Gate::authorize('delete', $post);
+
         $post->delete();
         return new JsonResponse([
             'message' => __('Post successful deleted'),
