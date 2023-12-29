@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\ApproveTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\Comment
@@ -42,7 +43,7 @@ class Comment extends Model
         'email'
     ];
 
-    public function post()
+    public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class);
     }
